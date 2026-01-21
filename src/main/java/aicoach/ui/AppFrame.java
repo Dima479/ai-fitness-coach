@@ -30,16 +30,22 @@ public final class AppFrame extends JFrame {
     }
 
     public void showLogin() {
+        loginPanel.reset();
         layout.show(root, "login");
     }
 
     public void showRegister() {
+        registerPanel.reset();
         layout.show(root, "register");
     }
 
     public void onAuthenticated(User user) {
+        onAuthenticated(user, false);
+    }
+
+    public void onAuthenticated(User user, boolean showProfile) {
         if (mainPanel != null) root.remove(mainPanel);
-        mainPanel = new MainPanel(this, user);
+        mainPanel = new MainPanel(this, user, showProfile);
         root.add(mainPanel, "main");
         layout.show(root, "main");
         revalidate();

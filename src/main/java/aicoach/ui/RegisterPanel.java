@@ -9,6 +9,9 @@ import java.awt.*;
 
 public final class RegisterPanel extends JPanel {
     private final AuthService auth = new AuthService();
+    private final JTextField email = new JTextField(24);
+    private final JPasswordField pass = new JPasswordField(24);
+    private final JPasswordField pass2 = new JPasswordField(24);
 
     public RegisterPanel(AppFrame frame) {
         setLayout(new GridBagLayout());
@@ -18,10 +21,6 @@ public final class RegisterPanel extends JPanel {
 
         JLabel title = new JLabel("Create account");
         title.setFont(title.getFont().deriveFont(22f));
-
-        JTextField email = new JTextField(24);
-        JPasswordField pass = new JPasswordField(24);
-        JPasswordField pass2 = new JPasswordField(24);
 
         JButton btnCreate = new JButton("Create");
         JButton btnBack = new JButton("Back to login");
@@ -60,12 +59,18 @@ public final class RegisterPanel extends JPanel {
                 }
                 User u = auth.register(email.getText(), pw1);
                 Dialogs.info(this, "Cont creat. Ești logat.");
-                frame.onAuthenticated(u);
+                frame.onAuthenticated(u, true);
             } catch (Exception ex) {
                 Dialogs.error(this, ex.getMessage());
             }
         });
 
         btnBack.addActionListener(e -> frame.showLogin());
+    }
+
+    public void reset() {
+        email.setText("");
+        pass.setText("");
+        pass2.setText("");
     }
 }

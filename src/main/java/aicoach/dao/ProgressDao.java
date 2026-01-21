@@ -16,7 +16,7 @@ import java.util.List;
 public final class ProgressDao {
 
     /**
-     * Returneaza lista de inregistrari de progres pentru un utilizator, ordonate descrescator dupa id
+     * Returneaza lista de inregistrari de progres pentru un utilizator, ordonate descrescator dupa data
      * (cele mai noi primele).
      *
      * @param userId ID-ul utilizatorului.
@@ -26,7 +26,7 @@ public final class ProgressDao {
     public List<ProgressEntry> list(long userId) {
         try (Connection c = Db.getConnection();
              PreparedStatement ps = c.prepareStatement(
-                     "select id, user_id, entry_date, weight_kg, calories_consumed, workout_min, notes from progress where user_id = ? order by id desc"
+                     "select id, user_id, entry_date, weight_kg, calories_consumed, workout_min, notes from progress where user_id = ? order by entry_date desc, id desc"
              )) {
             ps.setLong(1, userId);
             try (ResultSet rs = ps.executeQuery()) {

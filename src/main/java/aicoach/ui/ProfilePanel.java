@@ -10,6 +10,7 @@ import java.awt.*;
 
 public final class ProfilePanel extends JPanel {
     private final ProfileDao dao = new ProfileDao();
+    private final long userId;
 
     private final JTextField age = new JTextField(6);
     private final JTextField height = new JTextField(6);
@@ -18,9 +19,11 @@ public final class ProfilePanel extends JPanel {
     private final JComboBox<String> activity = new JComboBox<>(new String[]{"low", "moderate", "high"});
     private final JComboBox<String> gender = new JComboBox<>(new String[]{"male", "female", "other"});
 
+    private final JButton save = new JButton("Save profile");
     private final JLabel updatedAt = new JLabel("-");
 
     public ProfilePanel(User user) {
+        this.userId = user.id();
         setLayout(new BorderLayout());
         JPanel form = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
@@ -47,7 +50,6 @@ public final class ProfilePanel extends JPanel {
         gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Gender:"), gc);
         gc.gridx = 1; form.add(gender, gc); y++;
 
-        JButton save = new JButton("Save profile");
         gc.gridx = 0; gc.gridy = y; gc.gridwidth = 2;
         form.add(save, gc); y++;
 
@@ -56,23 +58,30 @@ public final class ProfilePanel extends JPanel {
 
         add(form, BorderLayout.NORTH);
 
-        load(user.id());
+        load(userId);
 
         save.addActionListener(e -> {
             try {
-                UserProfile p = build(user.id());
+                UserProfile p = build(userId);
                 dao.upsert(p);
                 Dialogs.info(this, "Saved.");
-                load(user.id());
+                load(userId);
             } catch (Exception ex) {
                 Dialogs.error(this, ex.getMessage());
             }
         });
     }
 
+    public void reload() {
+        load(userId);
+    }
+
     private void load(long userId) {
         UserProfile p = dao.get(userId);
-        if (p == null) return;
+        if (p == null) {
+            updatedAt.setText("Updated at: -");
+            return;
+        }
 
         age.setText(p.age() == null ? "" : String.valueOf(p.age()));
         height.setText(p.heightCm() == null ? "" : String.valueOf(p.heightCm()));

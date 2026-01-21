@@ -71,6 +71,24 @@ public final class ProfileDao {
     }
 
     /**
+     * Actualizeaza doar greutatea profilului si timestamp-ul.
+     *
+     * @param userId ID-ul utilizatorului.
+     * @param weightKg Greutatea noua (kg).
+     */
+    public void updateWeight(long userId, double weightKg) {
+        String sql = "update user_profiles set weight_kg = ?, updated_at = datetime('now') where user_id = ?";
+        try (Connection c = Db.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setDouble(1, weightKg);
+            ps.setLong(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("update profile weight failed: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Mapeaza randul curent din ResultSet intr-un obiect UserProfile, pastrand valorile NULL din DB ca null in Java.
      *
      * @param rs ResultSet pozitionat pe un rand valid.

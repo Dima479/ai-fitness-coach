@@ -8,13 +8,9 @@ import javax.swing.*;
 
 public final class App {
     public static void main(String[] args) {
-        try {
-            Db.init();
-        } catch (Exception e) {
-            e.printStackTrace(); // Afiseaza eroarea completa in terminal pentru debugging
-            Dialogs.error(null, "Eroare fatala la initializarea bazei de date: " + e.getMessage());
-            System.exit(1);
-        }
+        
+        Db.init();
+
         SwingUtilities.invokeLater(() -> {
             AppFrame frame = new AppFrame();
             frame.setVisible(true);

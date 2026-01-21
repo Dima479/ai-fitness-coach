@@ -16,7 +16,7 @@ import java.util.List;
 public final class PlanDao {
 
     /**
-     * Returneaza lista de planuri pentru un utilizator, ordonate descrescator dupa id
+     * Returneaza lista de planuri pentru un utilizator, ordonate descrescator dupa data crearii.
      *
      * @param userId ID-ul utilizatorului.
      * @return Lista de planuri ale utilizatorului
@@ -25,7 +25,7 @@ public final class PlanDao {
     public List<Plan> list(long userId) {
         try (Connection c = Db.getConnection();
              PreparedStatement ps = c.prepareStatement(
-                     "select id, user_id, plan_type, content, created_at from plans where user_id = ? order by id desc")) {
+                     "select id, user_id, plan_type, content, created_at from plans where user_id = ? order by created_at desc, id desc")) {
             ps.setLong(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 List<Plan> out = new ArrayList<>();

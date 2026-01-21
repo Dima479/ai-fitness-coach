@@ -9,6 +9,8 @@ import java.awt.*;
 
 public final class LoginPanel extends JPanel {
     private final AuthService auth = new AuthService();
+    private final JTextField email = new JTextField(24);
+    private final JPasswordField pass = new JPasswordField(24);
 
     public LoginPanel(AppFrame frame) {
         setLayout(new GridBagLayout());
@@ -18,9 +20,6 @@ public final class LoginPanel extends JPanel {
 
         JLabel title = new JLabel("Login");
         title.setFont(title.getFont().deriveFont(22f));
-
-        JTextField email = new JTextField(24);
-        JPasswordField pass = new JPasswordField(24);
 
         JButton btnLogin = new JButton("Login");
         JButton btnGoRegister = new JButton("Create account");
@@ -60,5 +59,10 @@ public final class LoginPanel extends JPanel {
         });
 
         btnGoRegister.addActionListener(e -> frame.showRegister());
+    }
+
+    public void reset() {
+        email.setText("");
+        pass.setText("");
     }
 }

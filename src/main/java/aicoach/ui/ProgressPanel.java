@@ -1,5 +1,6 @@
 package aicoach.ui;
 
+import aicoach.dao.ProfileDao;
 import aicoach.dao.ProgressDao;
 import aicoach.model.ProgressEntry;
 import aicoach.model.User;
@@ -12,15 +13,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 public final class ProgressPanel extends JPanel {
+    private final ProfileDao profileDao = new ProfileDao();
     private final ProgressDao dao = new ProgressDao();
 
     private final DefaultTableModel model = new DefaultTableModel(
-            new Object[]{"id", "date", "weight", "calories", "workout_min", "notes"}, 0
+            new Object[]{"date", "weight", "calories", "workout_min", "notes"}, 0
     ) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
     };
 
     private final JTable table = new JTable(model);
+    private List<ProgressEntry> entries = List.of();
 
     private final JTextField date = new JTextField(10);
     private final JTextField weight = new JTextField(8);
@@ -66,6 +69,9 @@ public final class ProgressPanel extends JPanel {
                         notes.getText()
                 );
                 dao.insert(entry);
+                if (entry.weightKg() != null) {
+                    profileDao.updateWeight(user.id(), entry.weightKg());
+                }
                 reload(user.id());
             } catch (Exception ex) {
                 Dialogs.error(this, ex.getMessage());
@@ -75,19 +81,19 @@ public final class ProgressPanel extends JPanel {
         del.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row < 0) return;
-            long id = Long.parseLong(model.getValueAt(row, 0).toString());
-            if (!Dialogs.confirm(this, "Delete entry " + id + "?")) return;
-            dao.delete(id, user.id());
+            if (row >= entries.size()) return;
+            if (!Dialogs.confirm(this, "Delete selected entry?")) return;
+            dao.delete(entries.get(row).id(), user.id());
             reload(user.id());
         });
     }
 
     private void reload(long userId) {
-        List<ProgressEntry> list = dao.list(userId);
+        entries = dao.list(userId);
         model.setRowCount(0);
-        for (ProgressEntry e : list) {
+        for (ProgressEntry e : entries) {
             model.addRow(new Object[]{
-                    e.id(), e.entryDate(), e.weightKg(), e.caloriesConsumed(), e.workoutMin(), e.notes()
+                    e.entryDate(), e.weightKg(), e.caloriesConsumed(), e.workoutMin(), e.notes()
             });
         }
     }

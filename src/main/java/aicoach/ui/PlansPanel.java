@@ -18,11 +18,12 @@ public final class PlansPanel extends JPanel {
     private final ProfileDao profileDao = new ProfileDao();
     private final CoachService coach = new CoachService();
 
-    private final DefaultTableModel model = new DefaultTableModel(new Object[]{"id", "type", "created_at"}, 0) {
+    private final DefaultTableModel model = new DefaultTableModel(new Object[]{"type", "created_at"}, 0) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
     };
     private final JTable table = new JTable(model);
     private final JTextArea content = new JTextArea();
+    private List<Plan> plans = List.of();
 
     public PlansPanel(User user) {
         setLayout(new BorderLayout());
@@ -43,7 +44,7 @@ public final class PlansPanel extends JPanel {
         content.setWrapStyleWord(true);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, new JScrollPane(content));
-        split.setDividerLocation(380);
+        split.setDividerLocation(500);
 
         add(split, BorderLayout.CENTER);
 
@@ -53,9 +54,8 @@ public final class PlansPanel extends JPanel {
             if (e.getValueIsAdjusting()) return;
             int row = table.getSelectedRow();
             if (row < 0) return;
-            long id = Long.parseLong(model.getValueAt(row, 0).toString());
-            Plan p = planDao.list(user.id()).stream().filter(x -> x.id() == id).findFirst().orElse(null);
-            content.setText(p == null ? "" : p.content());
+            if (row >= plans.size()) return;
+            content.setText(plans.get(row).content());
         });
 
         genWorkout.addActionListener(e -> {
@@ -91,18 +91,18 @@ public final class PlansPanel extends JPanel {
         delete.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row < 0) return;
-            long id = Long.parseLong(model.getValueAt(row, 0).toString());
-            if (!Dialogs.confirm(this, "Delete plan  " + id + "?")) return;
-            planDao.delete(id, user.id());
+            if (row >= plans.size()) return;
+            if (!Dialogs.confirm(this, "Delete selected plan?")) return;
+            planDao.delete(plans.get(row).id(), user.id());
             reload(user.id());
             content.setText("");
         });
     }
 
     private void reload(long userId) {
-        List<Plan> plans = planDao.list(userId);
+        plans = planDao.list(userId);
         model.setRowCount(0);
-        for (Plan p : plans) model.addRow(new Object[]{p.id(), p.planType(), p.createdAt()});
+        for (Plan p : plans) model.addRow(new Object[]{p.planType(), p.createdAt()});
         if (model.getRowCount() > 0) table.setRowSelectionInterval(0, 0);
     }
 }
