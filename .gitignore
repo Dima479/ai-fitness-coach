@@ -1,2 +1,5 @@
-# Project exclude paths
-/target/
+# Ignora fisierele de configurare secreta
+.env
+
+# Ignora fisierele generate de compilare si IDE
+target/

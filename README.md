@@ -14,7 +14,7 @@ Acest proiect este o aplicatie desktop dezvoltata in Java, menita sa functioneze
 
 - Limbaj: Java (JDK 17+)
 - Interfata Grafica: Java Swing
-- Baza de date: SQLite (stocare locala)
+- Baza de date: SQLite 
 - Build System: Apache Maven
 - Biblioteci: Jackson (pentru JSON), SLF4J (logging), SQLite JDBC
 
