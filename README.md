@@ -35,6 +35,14 @@ java -cp "target/classes;target/dependency/*" aicoach.App
 
 Alternativ, poti rula clasa `aicoach.App` direct din IDE.
 
+## Rulare rapida cu Maven Exec (PowerShell)
+
+Comanda de mai jos functioneaza in PowerShell (observa ghilimelele):
+
+```
+mvn -q exec:java "-Dexec.mainClass=aicoach.App"
+```
+
 ## Baza de date
 
 Aplicatia foloseste SQLite. La prima rulare sunt create tabelele necesare si este inserat un utilizator de test daca baza de date nu exista.
