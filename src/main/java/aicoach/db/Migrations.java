@@ -5,22 +5,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * @file Migrations.java
- * @brief Creeaza schema bazei de date (tabele + indexuri) daca nu exista deja.
+ * @file migrations.java
+ * @brief creeaza schema bazei de date (tabele + indexuri) daca nu exista deja.
  *
- * Foloseste comenzi CREATE TABLE IF NOT EXISTS si CREATE INDEX IF NOT EXISTS,
+ * foloseste comenzi create table if not exists si create index if not exists
  * astfel incat metoda poate fi rulata de mai multe ori fara sa strice datele existente.
  */
 public final class Migrations {
 
-    /** Constructor privat: clasa utilitara, nu trebuie instantata. */
+    /** constructor privat: clasa utilitara nu trebuie instantata. */
     private Migrations() {}
 
     /**
-     * Aplica migrarile pentru schema bazei de date: creeaza tabelele si indexurile necesare.
+     * aplica migrarile pentru schema bazei de date: creeaza tabelele si indexurile necesare.
      *
-     * @param c Conexiunea activa catre baza de date SQLite.
-     * @throws SQLException Daca o comanda SQL esueaza.
+     * @param c conexiunea activa catre baza de date sqlite.
+     * @throws sqlexception daca o comanda sql esueaza.
      */
     public static void apply(Connection c) throws SQLException {
         try (Statement st = c.createStatement()) {

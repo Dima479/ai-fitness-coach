@@ -9,11 +9,11 @@ public final class MainPanel extends JPanel {
     public MainPanel(AppFrame frame, User user, boolean showProfile) {
         setLayout(new BorderLayout());
 
-        JLabel header = new JLabel("Logged in as: " + user.email());
+        JLabel header = new JLabel("Autentificat ca: " + user.email());
         header.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
-        JButton profile = new JButton("Profile");
-        JButton logout = new JButton("Logout");
+        JButton profile = new JButton("Profil");
+        JButton logout = new JButton("Iesire");
         JPanel top = new JPanel(new BorderLayout());
         JPanel topRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         topRight.add(profile);
@@ -23,8 +23,8 @@ public final class MainPanel extends JPanel {
 
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Chat", new ChatPanel(user));
-        tabs.addTab("Plans", new PlansPanel(user));
-        tabs.addTab("Progress", new ProgressPanel(user));
+        tabs.addTab("Planuri", new PlansPanel(user));
+        tabs.addTab("Progres", new ProgressPanel(user));
 
         add(top, BorderLayout.NORTH);
         add(tabs, BorderLayout.CENTER);
@@ -32,7 +32,7 @@ public final class MainPanel extends JPanel {
         logout.addActionListener(e -> frame.logout());
 
         ProfilePanel profilePanel = new ProfilePanel(user);
-        JDialog profileDialog = new JDialog(frame, "Profile", Dialog.ModalityType.APPLICATION_MODAL);
+        JDialog profileDialog = new JDialog(frame, "Profil", Dialog.ModalityType.APPLICATION_MODAL);
         profileDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         profileDialog.setContentPane(profilePanel);
         profileDialog.pack();

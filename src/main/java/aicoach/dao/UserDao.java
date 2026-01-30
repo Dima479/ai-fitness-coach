@@ -6,20 +6,20 @@ import aicoach.model.User;
 import java.sql.*;
 
 /**
- * @file UserDao.java
- * @brief Acces la tabela users (cautare si inserare)
+ * @file userdao.java
+ * @brief acces la tabela users (cautare si inserare)
  *
- * Contine operatii de baza pentru utilizatori: cautare dupa email, cautare dupa id si inserare user nou.
- * Foloseste JDBC cu PreparedStatement pentru parametri
+ * contine operatii de baza pentru utilizatori: cautare dupa email cautare dupa id si inserare user nou.
+ * foloseste jdbc cu preparedstatement pentru parametri
  */
 public final class UserDao {
 
     /**
-     * Cauta un utilizator dupa email.
+     * cauta un utilizator dupa email.
      *
-     * @param email Emailul cautat.
-     * @return User daca exista, altfel null.
-     * @throws RuntimeException Daca apare o eroare SQL la interogare.
+     * @param email emailul cautat.
+     * @return user daca exista altfel null.
+     * @throws runtimeexception daca apare o eroare sql la interogare.
      */
     public User findByEmail(String email) {
         try (Connection c = Db.getConnection();
@@ -36,16 +36,16 @@ public final class UserDao {
                 );
             }
         } catch (SQLException e) {
-            throw new RuntimeException("findByEmail failed: " + e.getMessage(), e);
+            throw new RuntimeException("Cautare email esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Cauta un utilizator dupa id.
+     * cauta un utilizator dupa id.
      *
-     * @param id ID-ul utilizatorului.
-     * @return User daca exista, altfel null.
-     * @throws RuntimeException Daca apare o eroare SQL la interogare.
+     * @param id id-ul utilizatorului.
+     * @return user daca exista altfel null.
+     * @throws runtimeexception daca apare o eroare sql la interogare.
      */
     public User findById(long id) {
         try (Connection c = Db.getConnection();
@@ -62,17 +62,17 @@ public final class UserDao {
                 );
             }
         } catch (SQLException e) {
-            throw new RuntimeException("findById failed: " + e.getMessage(), e);
+            throw new RuntimeException("Cautare dupa id esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Insereaza un utilizator nou in tabela users si returneaza ID-ul generat.
+     * insereaza un utilizator nou in tabela users si returneaza id-ul generat.
      *
-     * @param email Emailul utilizatorului.
-     * @param passwordHash Hash-ul parolei (nu parola in clar).
-     * @return ID-ul generat pentru utilizatorul inserat.
-     * @throws RuntimeException Daca apare o eroare SQL la inserare.
+     * @param email emailul utilizatorului.
+     * @param passwordhash hash-ul parolei (nu parola in clar).
+     * @return id-ul generat pentru utilizatorul inserat.
+     * @throws runtimeexception daca apare o eroare sql la inserare.
      */
     public long insert(String email, String passwordHash) {
         try (Connection c = Db.getConnection();
@@ -86,10 +86,10 @@ public final class UserDao {
                 if (rs.next()) {
                     return rs.getLong(1);
                 }
-                throw new SQLException("Creating user failed, no ID obtained.");
+                throw new SQLException("Creare utilizator esuata, nu s-a obtinut id.");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("insert user failed: " + e.getMessage(), e);
+            throw new RuntimeException("Inserare utilizator esuata: " + e.getMessage(), e);
         }
     }
 }

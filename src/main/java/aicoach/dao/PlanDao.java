@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @file PlanDao.java
- * @brief Acces la tabela plans (listare, inserare, stergere).
+ * @file plandao.java
+ * @brief acces la tabela plans (listare inserare stergere).
  *
- * Ofera operatii pentru planurile unui utilizator: citire lista, adaugare plan nou si stergere plan.
+ * ofera operatii pentru planurile unui utilizator: citire lista adaugare plan nou si stergere plan.
  */
 public final class PlanDao {
 
     /**
-     * Returneaza lista de planuri pentru un utilizator, ordonate descrescator dupa data crearii.
+     * returneaza lista de planuri pentru un utilizator ordonate descrescator dupa data crearii.
      *
-     * @param userId ID-ul utilizatorului.
-     * @return Lista de planuri ale utilizatorului
-     * @throws RuntimeException Daca apare o eroare SQL la interogare.
+     * @param userid id-ul utilizatorului.
+     * @return lista de planuri ale utilizatorului
+     * @throws runtimeexception daca apare o eroare sql la interogare.
      */
     public List<Plan> list(long userId) {
         try (Connection c = Db.getConnection();
@@ -33,18 +33,18 @@ public final class PlanDao {
                 return out;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("list plans failed: " + e.getMessage(), e);
+            throw new RuntimeException("Listare planuri esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Insereaza un plan nou pentru un utilizator si returneaza ID-ul generat.
+     * insereaza un plan nou pentru un utilizator si returneaza id-ul generat.
      *
-     * @param userId ID-ul utilizatorului caruia ii apartine planul.
-     * @param planType Tipul planului (ex. WORKOUT, NUTRITION).
-     * @param content Continutul planului (text/descriere).
-     * @return ID-ul generat pentru planul inserat.
-     * @throws RuntimeException Daca apare o eroare SQL la inserare.
+     * @param userid id-ul utilizatorului caruia ii apartine planul.
+     * @param plantype tipul planului (ex. workout nutrition).
+     * @param content continutul planului (text/descriere).
+     * @return id-ul generat pentru planul inserat.
+     * @throws runtimeexception daca apare o eroare sql la inserare.
      */
     public long insert(long userId, String planType, String content) {
         try (Connection c = Db.getConnection();
@@ -61,17 +61,17 @@ public final class PlanDao {
                 return rs.getLong(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("insert plan failed: " + e.getMessage(), e);
+            throw new RuntimeException("Inserare plan esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Sterge un plan dupa id, dar doar daca apartine utilizatorului dat.
+     * sterge un plan dupa id dar doar daca apartine utilizatorului dat.
      *
-     * @param planId ID-ul planului de sters.
-     * @param userId ID-ul utilizatorului (folosit ca protectie ca sa nu stergi planul altcuiva).
-     * @return Nu returneaza nimic.
-     * @throws RuntimeException Daca apare o eroare SQL la stergere.
+     * @param planid id-ul planului de sters.
+     * @param userid id-ul utilizatorului (folosit ca protectie ca sa nu stergi planul altcuiva).
+     * @return nu returneaza nimic.
+     * @throws runtimeexception daca apare o eroare sql la stergere.
      */
     public void delete(long planId, long userId) {
         try (Connection c = Db.getConnection();
@@ -80,16 +80,16 @@ public final class PlanDao {
             ps.setLong(2, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("delete plan failed: " + e.getMessage(), e);
+            throw new RuntimeException("Stergere plan esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Map-eaza randul curent din ResultSet intr-un obiect Plan.
+     * map-eaza randul curent din resultset intr-un obiect plan.
      *
-     * @param rs ResultSet pozitionat pe un rand valid.
-     * @return Obiect Plan construit din coloanele randului curent.
-     * @throws SQLException Daca citirea coloanelor esueaza.
+     * @param rs resultset pozitionat pe un rand valid.
+     * @return obiect plan construit din coloanele randului curent.
+     * @throws sqlexception daca citirea coloanelor esueaza.
      */
     private Plan map(ResultSet rs) throws SQLException {
         return new Plan(

@@ -8,22 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @file ChatDao.java
- * @brief Acces la tabela chat_history (listare mesaje, inserare, stergere).
+ * @file chatdao.java
+ * @brief acces la tabela chat_history (listare mesaje inserare stergere).
  *
- * Permite citirea istoricului de chat pentru un utilizator, salvarea unui mesaj nou
+ * permite citirea istoricului de chat pentru un utilizator salvarea unui mesaj nou
  * si stergerea intregului istoric pentru utilizator.
  */
 public final class ChatDao {
 
     /**
-     * Returneaza lista de mesaje din istoricul conversatiei pentru un utilizator, limitata la un numar maxim de randuri.
-     * Mesajele sunt ordonate crescator dupa id (de la cele mai vechi la cele mai noi).
+     * returneaza lista de mesaje din istoricul conversatiei pentru un utilizator limitata la un numar maxim de randuri.
+     * mesajele sunt ordonate crescator dupa id (de la cele mai vechi la cele mai noi).
      *
-     * @param userId ID-ul utilizatorului.
-     * @param limit Numarul maxim de mesaje returnate.
-     * @return Lista de mesaje
-     * @throws RuntimeException Daca apare o eroare SQL la interogare.
+     * @param userid id-ul utilizatorului.
+     * @param limit numarul maxim de mesaje returnate.
+     * @return lista de mesaje
+     * @throws runtimeexception daca apare o eroare sql la interogare.
      */
     public List<ChatMessage> list(long userId, int limit) {
         try (Connection c = Db.getConnection();
@@ -38,18 +38,18 @@ public final class ChatDao {
                 return out;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("list chat failed: " + e.getMessage(), e);
+            throw new RuntimeException("Listare chat esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Insereaza un mesaj nou in istoricul de chat si returneaza ID-ul generat.
+     * insereaza un mesaj nou in istoricul de chat si returneaza id-ul generat.
      *
-     * @param userId ID-ul utilizatorului caruia ii apartine mesajul.
-     * @param role Rolul autorului mesajului (ex. user, assistant, system).
-     * @param message Continutul mesajului.
-     * @return ID-ul generat pentru mesajul inserat.
-     * @throws RuntimeException Daca apare o eroare SQL la inserare.
+     * @param userid id-ul utilizatorului caruia ii apartine mesajul.
+     * @param role rolul autorului mesajului (ex. user assistant system).
+     * @param message continutul mesajului.
+     * @return id-ul generat pentru mesajul inserat.
+     * @throws runtimeexception daca apare o eroare sql la inserare.
      */
     public long insert(long userId, String role, String message) {
         try (Connection c = Db.getConnection();
@@ -66,15 +66,15 @@ public final class ChatDao {
                 return rs.getLong(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("insert chat failed: " + e.getMessage(), e);
+            throw new RuntimeException("Inserare chat esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Sterge toate mesajele din istoricul de chat pentru un utilizator.
+     * sterge toate mesajele din istoricul de chat pentru un utilizator.
      *
-     * @param userId ID-ul utilizatorului.
-     * @throws RuntimeException Daca apare o eroare SQL la stergere.
+     * @param userid id-ul utilizatorului.
+     * @throws runtimeexception daca apare o eroare sql la stergere.
      */
     public void clear(long userId) {
         try (Connection c = Db.getConnection();
@@ -82,16 +82,16 @@ public final class ChatDao {
             ps.setLong(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("clear chat failed: " + e.getMessage(), e);
+            throw new RuntimeException("Stergere chat esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Map-eaza randul curent din ResultSet intr-un obiect ChatMessage.
+     * map-eaza randul curent din resultset intr-un obiect chatmessage.
      *
-     * @param rs ResultSet pozitionat pe un rand valid.
-     * @return Obiect ChatMessage construit din coloanele randului curent.
-     * @throws SQLException Daca citirea coloanelor esueaza.
+     * @param rs resultset pozitionat pe un rand valid.
+     * @return obiect chatmessage construit din coloanele randului curent.
+     * @throws sqlexception daca citirea coloanelor esueaza.
      */
     private ChatMessage map(ResultSet rs) throws SQLException {
         return new ChatMessage(

@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @file ProgressDao.java
- * @brief Acces la tabela progress (listare, inserare, stergere).
+ * @file progressdao.java
+ * @brief acces la tabela progress (listare inserare stergere).
  *
- * Permite citirea istoricului de progres al unui utilizator, adaugarea unei inregistrari noi
+ * permite citirea istoricului de progres al unui utilizator adaugarea unei inregistrari noi
  * si stergerea unei inregistrari existente.
  */
 public final class ProgressDao {
 
     /**
-     * Returneaza lista de inregistrari de progres pentru un utilizator, ordonate descrescator dupa data
+     * returneaza lista de inregistrari de progres pentru un utilizator ordonate descrescator dupa data
      * (cele mai noi primele).
      *
-     * @param userId ID-ul utilizatorului.
-     * @return Lista de inregistrari de progres (poate fi goala).
-     * @throws RuntimeException Daca apare o eroare SQL la interogare.
+     * @param userid id-ul utilizatorului.
+     * @return lista de inregistrari de progres (poate fi goala).
+     * @throws runtimeexception daca apare o eroare sql la interogare.
      */
     public List<ProgressEntry> list(long userId) {
         try (Connection c = Db.getConnection();
@@ -35,16 +35,16 @@ public final class ProgressDao {
                 return out;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("list progress failed: " + e.getMessage(), e);
+            throw new RuntimeException("Listare progres esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Insereaza o inregistrare noua de progres si returneaza ID-ul generat.
+     * insereaza o inregistrare noua de progres si returneaza id-ul generat.
      *
-     * @param e Inregistrarea de progres care va fi salvata.
-     * @return ID-ul generat pentru inregistrarea inserata.
-     * @throws RuntimeException Daca apare o eroare SQL la inserare.
+     * @param e inregistrarea de progres care va fi salvata.
+     * @return id-ul generat pentru inregistrarea inserata.
+     * @throws runtimeexception daca apare o eroare sql la inserare.
      */
     public long insert(ProgressEntry e) {
         try (Connection c = Db.getConnection();
@@ -64,16 +64,16 @@ public final class ProgressDao {
                 return rs.getLong(1);
             }
         } catch (SQLException ex) {
-            throw new RuntimeException("insert progress failed: " + ex.getMessage(), ex);
+            throw new RuntimeException("Inserare progres esuata: " + ex.getMessage(), ex);
         }
     }
 
     /**
-     * Sterge o inregistrare de progres dupa id, dar doar daca apartine utilizatorului dat.
+     * sterge o inregistrare de progres dupa id dar doar daca apartine utilizatorului dat.
      *
-     * @param id ID-ul inregistrarii de sters.
-     * @param userId ID-ul utilizatorului (folosit ca protectie ca sa nu stergi inregistrarea altcuiva).
-     * @throws RuntimeException Daca apare o eroare SQL la stergere.
+     * @param id id-ul inregistrarii de sters.
+     * @param userid id-ul utilizatorului (folosit ca protectie ca sa nu stergi inregistrarea altcuiva).
+     * @throws runtimeexception daca apare o eroare sql la stergere.
      */
     public void delete(long id, long userId) {
         try (Connection c = Db.getConnection();
@@ -82,16 +82,16 @@ public final class ProgressDao {
             ps.setLong(2, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("delete progress failed: " + e.getMessage(), e);
+            throw new RuntimeException("Stergere progres esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Map-eaza randul curent din ResultSet intr-un obiect ProgressEntry, pastrand valorile NULL din DB ca null in Java.
+     * map-eaza randul curent din resultset intr-un obiect progressentry pastrand valorile null din db ca null in java.
      *
-     * @param rs ResultSet pozitionat pe un rand valid.
-     * @return Obiect ProgressEntry construit din coloanele randului curent.
-     * @throws SQLException Daca citirea coloanelor esueaza.
+     * @param rs resultset pozitionat pe un rand valid.
+     * @return obiect progressentry construit din coloanele randului curent.
+     * @throws sqlexception daca citirea coloanelor esueaza.
      */
     private ProgressEntry map(ResultSet rs) throws SQLException {
         Double w = rs.getObject("weight_kg") == null ? null : rs.getDouble("weight_kg");

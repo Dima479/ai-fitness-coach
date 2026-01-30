@@ -9,45 +9,45 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 /**
- * @file OpenRouterClient.java
- * @brief Client HTTP pentru apelarea OpenRouter Chat Completions
+ * @file openrouterclient.java
+ * @brief client http pentru apelarea openrouter chat completions
  *
- * Construieste un request JSON cu mesaje (system + user), trimite cererea cu API key din env
+ * construieste un request json cu mesaje (system + user) trimite cererea cu api key din env
  * si returneaza textul raspunsului
  */
 public final class OpenRouterClient {
 
-    /** Endpoint-ul OpenRouter pentru chat completions. */
+    /** endpoint-ul openrouter pentru chat completions. */
     private static final String URL = "https://openrouter.ai/api/v1/chat/completions";
 
-    /** Client HTTP  folosit pentru trimiterea cererilor. */
+    /** client http  folosit pentru trimiterea cererilor. */
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();
 
-    /** Mapper JSON (Jackson) pentru construire JSON. */
+    /** mapper json (jackson) pentru construire json. */
     private final ObjectMapper om = new ObjectMapper();
 
-    /** Cheia API citita din variabila de mediu OPENROUTER_API_KEY. */
+    /** cheia api citita din variabila de mediu openrouter_api_key. */
     private final String key = System.getenv("OPENROUTER_API_KEY");
 
     /**
-     * Constructor: verifica existenta cheii API in variabilele de mediu.
+     * constructor: verifica existenta cheii api in variabilele de mediu.
      *
-     * @throws IllegalStateException Daca OPENROUTER_API_KEY lipseste sau este goala.
+     * @throws illegalstateexception daca openrouter_api_key lipseste sau este goala.
      */
     public OpenRouterClient() {
         if (key == null || key.isBlank()) throw new IllegalStateException("OPENROUTER_API_KEY lipsa");
     }
 
     /**
-     * Trimite un mesaj catre model si intoarce raspunsul generat.
+     * trimite un mesaj catre model si intoarce raspunsul generat.
      *
-     * @param model Numele modelului folosit
-     * @param system Mesajul system instructiuni pentru model
-     * @param user Mesajul userullui
-     * @param temperature Temperatura pentru variatie (0 = determinist, mai mare = mai creativ).
-     * @param maxTokens Numarul maxim de tokeni generati in raspuns.
-     * @return Continutul raspunsului
-     * @throws RuntimeException Daca request-ul esueaza
+     * @param model numele modelului folosit
+     * @param system mesajul system instructiuni pentru model
+     * @param user mesajul userullui
+     * @param temperature temperatura pentru variatie (0 = determinist mai mare = mai creativ).
+     * @param maxtokens numarul maxim de tokeni generati in raspuns.
+     * @return continutul raspunsului
+     * @throws runtimeexception daca request-ul esueaza
      */
     public String chat(String model, String system, String user, double temperature, int maxTokens) {
         try {
@@ -74,13 +74,13 @@ public final class OpenRouterClient {
 
             HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
             if (resp.statusCode() / 100 != 2) {
-                throw new RuntimeException("OpenRouter " + resp.statusCode() + ": " + resp.body());
+                throw new RuntimeException("Eroare OpenRouter " + resp.statusCode() + ": " + resp.body());
             }
 
             JsonNode json = om.readTree(resp.body());
             return json.at("/choices/0/message/content").asText("");
         } catch (Exception e) {
-            throw new RuntimeException("OpenRouter call failed: " + e.getMessage(), e);
+            throw new RuntimeException("Apel OpenRouter esuat: " + e.getMessage(), e);
         }
     }
 }

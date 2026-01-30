@@ -6,19 +6,19 @@ import aicoach.model.UserProfile;
 import java.sql.*;
 
 /**
- * @file ProfileDao.java
- * @brief Acces la tabela user_profiles (citire si upsert profil).
+ * @file profiledao.java
+ * @brief acces la tabela user_profiles (citire si upsert profil).
  *
- * Permite obtinerea profilului unui utilizator si salvarea lui (insert sau update) folosind UPSERT.
+ * permite obtinerea profilului unui utilizator si salvarea lui (insert sau update) folosind upsert.
  */
 public final class ProfileDao {
 
     /**
-     * Returneaza profilul unui utilizator dupa userId.
+     * returneaza profilul unui utilizator dupa userid.
      *
-     * @param userId ID-ul utilizatorului.
-     * @return UserProfile daca exista, altfel null.
-     * @throws RuntimeException Daca apare o eroare SQL la interogare.
+     * @param userid id-ul utilizatorului.
+     * @return userprofile daca exista altfel null.
+     * @throws runtimeexception daca apare o eroare sql la interogare.
      */
     public UserProfile get(long userId) {
         try (Connection c = Db.getConnection();
@@ -31,16 +31,16 @@ public final class ProfileDao {
                 return map(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("get profile failed: " + e.getMessage(), e);
+            throw new RuntimeException("Citire profil esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Insereaza sau actualizeaza profilul (UPSERT) pentru user_id:
-     * daca nu exista rand, face INSERT; daca exista deja, face UPDATE.
+     * insereaza sau actualizeaza profilul (upsert) pentru user_id:
+     * daca nu exista rand face insert; daca exista deja face update.
      *
-     * @param p Profilul de salvat.
-     * @throws RuntimeException Daca apare o eroare SQL la inserare/actualizare.
+     * @param p profilul de salvat.
+     * @throws runtimeexception daca apare o eroare sql la inserare/actualizare.
      */
     public void upsert(UserProfile p) {
         String sql =
@@ -66,15 +66,15 @@ public final class ProfileDao {
             ps.setString(7, p.gender());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("upsert profile failed: " + e.getMessage(), e);
+            throw new RuntimeException("Salvare profil esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Actualizeaza doar greutatea profilului si timestamp-ul.
+     * actualizeaza doar greutatea profilului si timestamp-ul.
      *
-     * @param userId ID-ul utilizatorului.
-     * @param weightKg Greutatea noua (kg).
+     * @param userid id-ul utilizatorului.
+     * @param weightkg greutatea noua (kg).
      */
     public void updateWeight(long userId, double weightKg) {
         String sql = "update user_profiles set weight_kg = ?, updated_at = datetime('now') where user_id = ?";
@@ -84,16 +84,16 @@ public final class ProfileDao {
             ps.setLong(2, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("update profile weight failed: " + e.getMessage(), e);
+            throw new RuntimeException("Actualizare greutate profil esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Mapeaza randul curent din ResultSet intr-un obiect UserProfile, pastrand valorile NULL din DB ca null in Java.
+     * mapeaza randul curent din resultset intr-un obiect userprofile pastrand valorile null din db ca null in java.
      *
-     * @param rs ResultSet pozitionat pe un rand valid.
-     * @return Obiect UserProfile construit din coloanele randului curent.
-     * @throws SQLException Daca citirea coloanelor esueaza.
+     * @param rs resultset pozitionat pe un rand valid.
+     * @return obiect userprofile construit din coloanele randului curent.
+     * @throws sqlexception daca citirea coloanelor esueaza.
      */
     private UserProfile map(ResultSet rs) throws SQLException {
         Integer age = rs.getObject("age") == null ? null : rs.getInt("age");

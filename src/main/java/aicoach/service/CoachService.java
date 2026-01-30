@@ -5,42 +5,42 @@ import aicoach.model.UserProfile;
 import aicoach.util.Validators;
 
 /**
- * @file CoachService.java
- * @brief Serviciu care genereaza planuri de workout si nutritie folosind AI (OpenRouter).
+ * @file coachservice.java
+ * @brief serviciu care genereaza planuri de workout si nutritie folosind ai (openrouter).
  *
- * Construieste prompt-uri (system + user) pe baza profilului si apeleaza OpenRouterClient.
+ * construieste prompt-uri (system + user) pe baza profilului si apeleaza openrouterclient.
  */
 public final class CoachService {
 
-    /** Model implicit: ia din OPENROUTER_MODEL, iar daca lipseste foloseste fallback. */
+    /** model implicit: ia din openrouter_model iar daca lipseste foloseste fallback. */
     private static final String DEFAULT_MODEL =
             System.getenv().getOrDefault("OPENROUTER_MODEL", "openai/gpt-4o-mini");
 
-    /** Clientul care trimite request-urile HTTP catre OpenRouter. */
+    /** clientul care trimite request-urile http catre openrouter. */
     private final OpenRouterClient ai = new OpenRouterClient();
 
-    /** Modelul folosit de acest serviciu (mereu DEFAULT_MODEL in aceasta varianta). */
+    /** modelul folosit de acest serviciu (mereu default_model in aceasta varianta). */
     private final String model = DEFAULT_MODEL;
 
     /**
-     * Genereaza un plan de antrenament (3 zile) folosind AI, pe baza profilului.
+     * genereaza un plan de antrenament (3 zile) folosind ai pe baza profilului.
      *
-     * @param p Profilul utilizatorului (poate fi null; atunci se trimit valori "unknown").
-     * @return Textul planului de antrenament generat de AI.
-     * @throws RuntimeException Daca apelul catre OpenRouter esueaza.
+     * @param p profilul utilizatorului (poate fi null; atunci se trimit valori "unknown").
+     * @return textul planului de antrenament generat de ai.
+     * @throws runtimeexception daca apelul catre openrouter esueaza.
      */
     public String generateWorkoutPlan(UserProfile p) {
         String system = baseSystemPrompt();
 
         String user = String.join("\n",
-                "Task: Build a workout plan.",
-                "Constraints:",
-                "- Give a 3-day workout plan",
-                "- Make as short as possible, using less text but be precise",
-                "- Include warmup, main lifts, progression rule, and cardio/steps.",
-                "- Keep it realistic and safe for general population. If medical/pain issues: advise specialist.",
+                "Sarcina: creeaza un plan de antrenament.",
+                "Constrangeri:",
+                "- Ofera un plan de antrenament pe 3 zile",
+                "- Fa-l cat mai scurt posibil, folosind putin text dar precis",
+                "- Include incalzire, exercitii principale, regula de progresie si cardio/pasi.",
+                "- Pastreaza-l realist si sigur pentru populatia generala. Daca exista probleme medicale/durere: recomanda specialist.",
                 "",
-                "User profile:",
+                "Profil utilizator:",
                 profileBlock(p)
         );
 
@@ -48,24 +48,24 @@ public final class CoachService {
     }
 
     /**
-     * Genereaza un plan de nutritie folosind AI, pe baza profilului.
+     * genereaza un plan de nutritie folosind ai pe baza profilului.
      *
-     * @param p Profilul utilizatorului (poate fi null; atunci se trimit valori "unknown").
-     * @return Textul planului de nutritie generat de AI.
-     * @throws RuntimeException Daca apelul catre OpenRouter esueaza.
+     * @param p profilul utilizatorului (poate fi null; atunci se trimit valori "unknown").
+     * @return textul planului de nutritie generat de ai.
+     * @throws runtimeexception daca apelul catre openrouter esueaza.
      */
     public String generateNutritionPlan(UserProfile p) {
         String system = baseSystemPrompt();
 
         String user = String.join("\n",
-                "Task: Build a nutrition plan.",
-                "Constraints:",
-                "- Give daily targets (calories, protein, fats, carbs) and a simple meal template.",
-                "- If weight is missing, assume 75kg but mention its an assumption.",
-                "- Keep it practical (Romania style foods ok).",
-                "- Add a simple adjustment rule based on weekly weight trend.",
+                "Sarcina: creeaza un plan de nutritie.",
+                "Constrangeri:",
+                "- Ofera tinte zilnice (calorii, proteine, grasimi, carbohidrati) si un sablon simplu de mese.",
+                "- Daca greutatea lipseste, presupune 75kg dar mentioneaza ca este o presupunere.",
+                "- Pastreaza-l practic (mancaruri in stil Romania ok).",
+                "- Adauga o regula simpla de ajustare bazata pe trendul saptamanal al greutatii.",
                 "",
-                "User profile:",
+                "Profil utilizator:",
                 profileBlock(p)
         );
 
@@ -73,45 +73,61 @@ public final class CoachService {
     }
 
     /**
-     * Construieste mesajul de sistem (reguli generale) pentru model.
+     * construieste mesajul de sistem (reguli generale) pentru model.
      *
-     * @return Textul system prompt folosit la toate cererile.
+     * @return textul system prompt folosit la toate cererile.
      */
     private static String baseSystemPrompt() {
         return String.join("\n",
-                "You are an evidence-based fitness and nutrition coach.",
-                "You give safe, realistic advice and avoid medical diagnosis.",
-                "If the user mentions sharp pain, illness, eating disorders, or medical risk: recommend consulting a professional.",
-                "Prefer actionable plans: bullets, numbers, clear steps.",
-                "Do not invent personal data; if missing, state assumptions.",
-                "Always respond in Romanian without diacritics."
+                "Esti un antrenor de fitness si nutritie bazat pe dovezi.",
+                "Oferi sfaturi sigure si realiste si eviti diagnosticarea medicala.",
+                "Daca utilizatorul mentioneaza durere acuta, boala, tulburari de alimentatie sau risc medical: recomanda consult de specialitate.",
+                "Preferi planuri aplicabile: puncte, numere, pasi clari.",
+                "Nu inventa date personale; daca lipsesc, mentioneaza presupunerile.",
+                "Raspunde mereu in romana fara diacritice."
         );
     }
 
     /**
-     * Construieste un bloc text cu campurile profilului pentru a fi inclus in prompt.
-     * Normalizeaza valorile lipsa ca "unknown".
+     * construieste un bloc text cu campurile profilului pentru a fi inclus in prompt.
+     * normalizeaza valorile lipsa ca "unknown".
      *
-     * @param p Profilul utilizatorului.
-     * @return Bloc text cu campurile profilului pe linii separate.
+     * @param p profilul utilizatorului.
+     * @return bloc text cu campurile profilului pe linii separate.
      */
     private static String profileBlock(UserProfile p) {
         if (p == null) {
-            return "- userId: unknown\n- age: unknown\n- heightCm: unknown\n- weightKg: unknown\n- goal: unknown\n- activityLevel: unknown\n- gender: unknown";
+            return "- idUtilizator: necunoscut\n- varsta: necunoscut\n- inaltimeCm: necunoscut\n- greutateKg: necunoscut\n- obiectiv: necunoscut\n- nivelActivitate: necunoscut\n- gen: necunoscut";
         }
 
-        String goal = Validators.nvl(p.goal());
-        String lvl = Validators.nvl(p.activityLevel());
-        String gender = Validators.nvl(p.gender());
+        String goal = toRoValue(Validators.nvl(p.goal()));
+        String lvl = toRoValue(Validators.nvl(p.activityLevel()));
+        String gender = toRoValue(Validators.nvl(p.gender()));
 
         return String.join("\n",
-                "- userId: " + p.userId(),
-                "- age: " + (p.age() == null ? "unknown" : p.age()),
-                "- heightCm: " + (p.heightCm() == null ? "unknown" : p.heightCm()),
-                "- weightKg: " + (p.weightKg() == null ? "unknown" : p.weightKg()),
-                "- goal: " + (goal.isBlank() ? "unknown" : goal),
-                "- activityLevel: " + (lvl.isBlank() ? "unknown" : lvl),
-                "- gender: " + (gender.isBlank() ? "unknown" : gender)
+                "- idUtilizator: " + p.userId(),
+                "- varsta: " + (p.age() == null ? "necunoscut" : p.age()),
+                "- inaltimeCm: " + (p.heightCm() == null ? "necunoscut" : p.heightCm()),
+                "- greutateKg: " + (p.weightKg() == null ? "necunoscut" : p.weightKg()),
+                "- obiectiv: " + (goal.isBlank() ? "necunoscut" : goal),
+                "- nivelActivitate: " + (lvl.isBlank() ? "necunoscut" : lvl),
+                "- gen: " + (gender.isBlank() ? "necunoscut" : gender)
         );
+    }
+
+    private static String toRoValue(String value) {
+        if (value == null) return "";
+        return switch (value) {
+            case "weight_loss" -> "slabire";
+            case "bulking" -> "masa";
+            case "maintenance" -> "mentinere";
+            case "low" -> "scazut";
+            case "moderate" -> "moderat";
+            case "high" -> "ridicat";
+            case "male" -> "masculin";
+            case "female" -> "feminin";
+            case "other" -> "altul";
+            default -> value;
+        };
     }
 }

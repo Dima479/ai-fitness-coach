@@ -1,9 +1,9 @@
 package aicoach.model;
 /**
- * @file UserProfile.java
- * @brief Model de date imutabil pentru profilul unui utilizator.
+ * @file userprofile.java
+ * @brief model de date imutabil pentru profilul unui utilizator.
  *
- * Contine date biometrice si preferinte (scop, nivel de activitate etc.), plus momentul ultimei actualizari.
+ * contine date biometrice si preferinte (scop nivel de activitate etc.) plus momentul ultimei actualizari.
  */
 
 public record UserProfile(

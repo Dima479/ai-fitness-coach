@@ -19,11 +19,11 @@ public final class RegisterPanel extends JPanel {
         gc.insets = new Insets(6, 6, 6, 6);
         gc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel title = new JLabel("Create account");
+        JLabel title = new JLabel("Creeaza cont");
         title.setFont(title.getFont().deriveFont(22f));
 
-        JButton btnCreate = new JButton("Create");
-        JButton btnBack = new JButton("Back to login");
+        JButton btnCreate = new JButton("Creeaza");
+        JButton btnBack = new JButton("Inapoi la autentificare");
 
         gc.gridx = 0; gc.gridy = 0; gc.gridwidth = 2;
         add(title, gc);
@@ -34,12 +34,12 @@ public final class RegisterPanel extends JPanel {
         add(email, gc);
 
         gc.gridx = 0; gc.gridy++;
-        add(new JLabel("Password:"), gc);
+        add(new JLabel("Parola:"), gc);
         gc.gridx = 1;
         add(pass, gc);
 
         gc.gridx = 0; gc.gridy++;
-        add(new JLabel("Repeat password:"), gc);
+        add(new JLabel("Repeta parola:"), gc);
         gc.gridx = 1;
         add(pass2, gc);
 
@@ -58,7 +58,7 @@ public final class RegisterPanel extends JPanel {
                     return;
                 }
                 User u = auth.register(email.getText(), pw1);
-                Dialogs.info(this, "Cont creat. Ești logat.");
+                Dialogs.info(this, "Cont creat. Esti logat.");
                 frame.onAuthenticated(u, true);
             } catch (Exception ex) {
                 Dialogs.error(this, ex.getMessage());

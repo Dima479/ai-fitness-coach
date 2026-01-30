@@ -18,11 +18,11 @@ public final class LoginPanel extends JPanel {
         gc.insets = new Insets(6, 6, 6, 6);
         gc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel title = new JLabel("Login");
+        JLabel title = new JLabel("Autentificare");
         title.setFont(title.getFont().deriveFont(22f));
 
-        JButton btnLogin = new JButton("Login");
-        JButton btnGoRegister = new JButton("Create account");
+        JButton btnLogin = new JButton("Autentificare");
+        JButton btnGoRegister = new JButton("Creeaza cont");
 
         gc.gridx = 0; gc.gridy = 0; gc.gridwidth = 2;
         add(title, gc);
@@ -33,7 +33,7 @@ public final class LoginPanel extends JPanel {
         add(email, gc);
 
         gc.gridx = 0; gc.gridy++;
-        add(new JLabel("Password:"), gc);
+        add(new JLabel("Parola:"), gc);
         gc.gridx = 1;
         add(pass, gc);
 
@@ -49,7 +49,7 @@ public final class LoginPanel extends JPanel {
                 String pw = new String(pass.getPassword());
                 User u = auth.login(em, pw);
                 if (u == null) {
-                    Dialogs.error(this, "Email/parola greșite.");
+                    Dialogs.error(this, "Email/parola gresite.");
                     return;
                 }
                 frame.onAuthenticated(u);

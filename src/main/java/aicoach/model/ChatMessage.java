@@ -1,9 +1,9 @@
 package aicoach.model;
 /**
- * @file ChatMessage.java
- * @brief Model de date imutabil pentru un mesaj din istoricul conversatiei.
+ * @file chatmessage.java
+ * @brief model de date imutabil pentru un mesaj din istoricul conversatiei.
  *
- * Contine rolul(generat de AI sau user), continutul mesajului si momentul trimiterii.
+ * contine rolul(generat de ai sau user) continutul mesajului si momentul trimiterii.
  */
 
 

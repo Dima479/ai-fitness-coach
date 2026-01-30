@@ -8,23 +8,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * @file SeedData.java
- * @brief Insereaza date initiale in baza de date (doar daca nu exista deja utilizatori).
+ * @file seeddata.java
+ * @brief insereaza date initiale in baza de date (doar daca nu exista deja utilizatori).
  *
- * Creeaza un utilizator de test si inregistrari asociate (profil, progres, plan, mesaj in chat).
- * Varianta foloseste Statement (SQL construit ca string), deoarece valorile sunt hardcodate/controlate.
+ * creeaza un utilizator de test si inregistrari asociate (profil progres plan mesaj in chat).
+ * varianta foloseste statement (sql construit ca string) deoarece valorile sunt hardcodate/controlate.
  */
 public final class SeedData {
 
-    /** Constructor privat: clasa utilitara, nu se instantiaza. */
+    /** constructor privat: clasa utilitara nu se instantiaza. */
     private SeedData() {}
 
     /**
-     * Insereaza date initiale in DB doar daca tabelul users este gol.
+     * insereaza date initiale in db doar daca tabelul users este gol.
      *
-     * @param c Conexiunea activa catre baza de date SQLite.
-     * @return Nu returneaza nimic.
-     * @throws SQLException Daca o comanda SQL esueaza.
+     * @param c conexiunea activa catre baza de date sqlite.
+     * @return nu returneaza nimic.
+     * @throws sqlexception daca o comanda sql esueaza.
      */
     public static void apply(Connection c) throws SQLException {
         if (hasAnyUser(c)) return;
@@ -67,11 +67,11 @@ public final class SeedData {
     }
 
     /**
-     * Verifica daca exista cel putin un utilizator in tabelul users.
+     * verifica daca exista cel putin un utilizator in tabelul users.
      *
-     * @param c Conexiunea activa catre baza de date SQLite.
-     * @return true daca exista cel putin un utilizator, altfel false.
-     * @throws SQLException Daca interogarea SQL esueaza.
+     * @param c conexiunea activa catre baza de date sqlite.
+     * @return true daca exista cel putin un utilizator altfel false.
+     * @throws sqlexception daca interogarea sql esueaza.
      */
     private static boolean hasAnyUser(Connection c) throws SQLException {
         try (Statement st = c.createStatement();

@@ -34,10 +34,10 @@ public final class ChatPanel extends JPanel {
         chat.setWrapStyleWord(true);
 
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton send = new JButton("Send");
-        JButton clear = new JButton("Clear");
+        JButton send = new JButton("Trimite");
+        JButton clear = new JButton("Sterge");
 
-        bottom.add(new JLabel("Message:"));
+        bottom.add(new JLabel("Mesaj:"));
         bottom.add(input);
         bottom.add(send);
         bottom.add(clear);
@@ -58,16 +58,16 @@ public final class ChatPanel extends JPanel {
                 @Override
                 protected String doInBackground() {
                     UserProfile p = profileDao.get(user.id());
-                    if (p == null) throw new RuntimeException("Complete your profile before chat");
+                    if (p == null) throw new RuntimeException("Completeaza profilul inainte de chat");
 
                     chatDao.insert(user.id(), "user", msg);
 
                     String system = """
-                            You are an AI fitness coach. Respond in English.
-                            Be practical and safe: don’t diagnose and don’t promise medical results.
-                            If important data is missing, ask at most 2 clear questions.
-                            For sharp/persistent pain or serious symptoms: recommend medical consultation.
-                            Give structured answers (bullet points) when useful.
+                            Esti un antrenor AI de fitness. Raspunde in romana fara diacritice.
+                            Fii practic si in siguranta: nu pune diagnostic si nu promite rezultate medicale.
+                            Daca lipsesc date importante, pune cel mult 2 intrebari clare.
+                            Pentru durere acuta/persistenta sau simptome serioase: recomanda consult medical.
+                            Da raspunsuri structurate (liste cu puncte) cand e util.
                     """;
 
                     String context = buildContext(user.id(), p, msg);
@@ -80,7 +80,7 @@ public final class ChatPanel extends JPanel {
                 protected void done() {
                     try {
                         String reply = get();
-                        if (reply == null || reply.isBlank()) reply = "(try again)";
+                        if (reply == null || reply.isBlank()) reply = "(incearca din nou)";
                         chatDao.insert(user.id(), "assistant", reply);
                         loadHistory(user.id());
                     } catch (Exception ex) {
@@ -94,7 +94,7 @@ public final class ChatPanel extends JPanel {
         });
 
         clear.addActionListener(e -> {
-            if (!Dialogs.confirm(this, "delete all chat?")) return;
+            if (!Dialogs.confirm(this, "Stergi tot chatul?")) return;
             chatDao.clear(user.id());
             loadHistory(user.id());
         });
@@ -121,21 +121,21 @@ public final class ChatPanel extends JPanel {
         StringBuilder sb = new StringBuilder();
 
         sb.append("PROFIL:\n")
-                .append("age=").append(p.age()).append(", ")
-                .append("height_cm=").append(p.heightCm()).append(", ")
-                .append("weight_kg=").append(p.weightKg()).append(", ")
-                .append("goal=").append(p.goal()).append(", ")
-                .append("activity_level=").append(p.activityLevel()).append(", ")
-                .append("gender=").append(p.gender()).append("\n\n");
+                .append("varsta=").append(p.age()).append(", ")
+                .append("inaltime_cm=").append(p.heightCm()).append(", ")
+                .append("greutate_kg=").append(p.weightKg()).append(", ")
+                .append("obiectiv=").append(toRoValue(p.goal())).append(", ")
+                .append("nivel_activitate=").append(toRoValue(p.activityLevel())).append(", ")
+                .append("gen=").append(toRoValue(p.gender())).append("\n\n");
 
         sb.append("PROGRES (ultimele ").append(progTake).append("):\n");
         for (int i = 0; i < progTake; i++) {
             ProgressEntry x = prog.get(i);
             sb.append("- ").append(x.entryDate())
-                    .append(": weight=").append(x.weightKg())
-                    .append(", calories=").append(x.caloriesConsumed())
-                    .append(", workout_min=").append(x.workoutMin())
-                    .append(", notes=").append(x.notes())
+                    .append(": greutate=").append(x.weightKg())
+                    .append(", calorii=").append(x.caloriesConsumed())
+                    .append(", minute_antrenament=").append(x.workoutMin())
+                    .append(", note=").append(x.notes())
                     .append("\n");
         }
         sb.append("\n");
@@ -148,8 +148,24 @@ public final class ChatPanel extends JPanel {
         }
         sb.append("\n");
 
-        sb.append("User messsage:\n").append(userMsg);
+        sb.append("Mesaj utilizator:\n").append(userMsg);
 
         return sb.toString();
+    }
+
+    private static String toRoValue(String value) {
+        if (value == null) return null;
+        return switch (value) {
+            case "weight_loss" -> "slabire";
+            case "bulking" -> "masa";
+            case "maintenance" -> "mentinere";
+            case "low" -> "scazut";
+            case "moderate" -> "moderat";
+            case "high" -> "ridicat";
+            case "male" -> "masculin";
+            case "female" -> "feminin";
+            case "other" -> "altul";
+            default -> value;
+        };
     }
 }

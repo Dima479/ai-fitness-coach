@@ -14,7 +14,7 @@ public final class AppFrame extends JFrame {
     private MainPanel mainPanel;
 
     public AppFrame() {
-        super("AI Fitness Coach");
+        super("Antrenor fitness AI");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(1200, 650);
         setLocationRelativeTo(null);

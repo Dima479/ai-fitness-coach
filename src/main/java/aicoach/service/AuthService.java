@@ -6,23 +6,23 @@ import aicoach.util.Crypto;
 import aicoach.util.Validators;
 
 /**
- * @file AuthService.java
- * @brief Logica de autentificare si inregistrare utilizatori.
+ * @file authservice.java
+ * @brief logica de autentificare si inregistrare utilizatori.
  *
- * Valideaza datele de intrare, verifica parola prin compararea hash-ului si foloseste UserDao pentru acces la DB.
+ * valideaza datele de intrare verifica parola prin compararea hash-ului si foloseste userdao pentru acces la db.
  */
 public final class AuthService {
 
-    /** DAO pentru operatii pe tabela users (cautare/inserare) */
+    /** dao pentru operatii pe tabela users (cautare/inserare) */
     private final UserDao userDao = new UserDao();
 
     /**
-     * Autentifica un utilizator pe baza emailului si parolei.
+     * autentifica un utilizator pe baza emailului si parolei.
      *
-     * @param email Emailul introdus de utilizator.
-     * @param password Parola introdusa de utilizator
-     * @return User daca autentificarea reuseste, altfel null.
-     * @throws IllegalArgumentException Daca emailul/parola sunt invalide
+     * @param email emailul introdus de utilizator.
+     * @param password parola introdusa de utilizator
+     * @return user daca autentificarea reuseste altfel null.
+     * @throws illegalargumentexception daca emailul/parola sunt invalide
      */
     public User login(String email, String password) {
         Validators.require(Validators.isEmail(email), "Email invalid.");
@@ -35,12 +35,12 @@ public final class AuthService {
     }
 
     /**
-     * Inregistreaza un utilizator nou si il returneaza din DB.
+     * inregistreaza un utilizator nou si il returneaza din db.
      *
-     * @param email Emailul pentru cont.
-     * @param password Parola pentru cont.
-     * @return User creat (citit din DB dupa inserare).
-     * @throws IllegalArgumentException Daca emailul/parola sunt invalide sau emailul este deja folosit.
+     * @param email emailul pentru cont.
+     * @param password parola pentru cont.
+     * @return user creat (citit din db dupa inserare).
+     * @throws illegalargumentexception daca emailul/parola sunt invalide sau emailul este deja folosit.
      */
     public User register(String email, String password) {
         Validators.require(Validators.isEmail(email), "Email invalid.");

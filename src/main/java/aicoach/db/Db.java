@@ -5,20 +5,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 /**
- * @file Db.java
- * @brief Utilitar static pentru initializarea si accesul la baza de date SQLite.
+ * @file db.java
+ * @brief utilitar static pentru initializarea si accesul la baza de date sqlite.
  *
- * Configureaza URL-ul JDBC, activeaza foreign keys (PRAGMA) pentru fiecare conexiune
+ * configureaza url-ul jdbc activeaza foreign keys (pragma) pentru fiecare conexiune
  * si ruleaza migrarile pentru a crea/actualiza schema bazei de date.
- * Seed-ul este dezactivat (nu se creeaza utilizator default).
+ * seed-ul este dezactivat (nu se creeaza utilizator default).
  */
 public final class Db {
     private static String jdbcUrl;
     private Db() {}
 
     /**
-     * Initializeaza baza de date:
-     * seteaza jdbcUrl, deschide o conexiune, activeaza foreign keys,
+     * initializeaza baza de date:
+     * seteaza jdbcurl deschide o conexiune activeaza foreign keys
      * apoi ruleaza migrarile (creare/actualizare tabele).
      * dupa care adauga un user default daca nu exista
      */
@@ -31,16 +31,16 @@ public final class Db {
             Migrations.apply(c);
             SeedData.apply(c);
         } catch (SQLException e) {
-            throw new RuntimeException("DB init failed: " + e.getMessage(), e);
+            throw new RuntimeException("Initializare baza de date esuata: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Creeaza si returneaza o conexiune noua catre baza de date SQLite.
-     * Activeaza foreign keys pentru conexiunea returnata.
+     * creeaza si returneaza o conexiune noua catre baza de date sqlite.
+     * activeaza foreign keys pentru conexiunea returnata.
      *
-     * @return O conexiune noua catre baza de date, cu foreign keys activate.
-     * @throws SQLException Daca nu se poate deschide conexiunea.
+     * @return o conexiune noua catre baza de date cu foreign keys activate.
+     * @throws sqlexception daca nu se poate deschide conexiunea.
      */
     public static Connection getConnection() throws SQLException {
         Connection c = DriverManager.getConnection(jdbcUrl);
@@ -51,10 +51,10 @@ public final class Db {
     }
 
     /**
-     * Rezolva calea fisierului DB:
-     * incearca in src/main/resources, iar daca nu se poate, foloseste un fisier local in directorul curent.
+     * rezolva calea fisierului db:
+     * incearca in src/main/resources iar daca nu se poate foloseste un fisier local in directorul curent.
      *
-     * @return Calea catre fisierul bazei de date.
+     * @return calea catre fisierul bazei de date.
      */
     private static Path resolveDbPath() {
         Path preferred = Paths.get("src", "main", "resources", "baza de date.db");

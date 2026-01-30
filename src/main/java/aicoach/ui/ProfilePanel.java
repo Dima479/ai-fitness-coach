@@ -15,11 +15,11 @@ public final class ProfilePanel extends JPanel {
     private final JTextField age = new JTextField(6);
     private final JTextField height = new JTextField(6);
     private final JTextField weight = new JTextField(6);
-    private final JComboBox<String> goal = new JComboBox<>(new String[]{"weight_loss", "bulking", "maintenance"});
-    private final JComboBox<String> activity = new JComboBox<>(new String[]{"low", "moderate", "high"});
-    private final JComboBox<String> gender = new JComboBox<>(new String[]{"male", "female", "other"});
+    private final JComboBox<String> goal = new JComboBox<>(new String[]{"slabire", "masa", "mentinere"});
+    private final JComboBox<String> activity = new JComboBox<>(new String[]{"scazut", "moderat", "ridicat"});
+    private final JComboBox<String> gender = new JComboBox<>(new String[]{"masculin", "feminin", "altul"});
 
-    private final JButton save = new JButton("Save profile");
+    private final JButton save = new JButton("Salveaza profil");
     private final JLabel updatedAt = new JLabel("-");
 
     public ProfilePanel(User user) {
@@ -32,22 +32,22 @@ public final class ProfilePanel extends JPanel {
 
         int y = 0;
 
-        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Age:"), gc);
+        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Varsta:"), gc);
         gc.gridx = 1; form.add(age, gc); y++;
 
-        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Height (cm):"), gc);
+        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Inaltime (cm):"), gc);
         gc.gridx = 1; form.add(height, gc); y++;
 
-        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Weight (kg):"), gc);
+        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Greutate (kg):"), gc);
         gc.gridx = 1; form.add(weight, gc); y++;
 
-        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Goal:"), gc);
+        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Obiectiv:"), gc);
         gc.gridx = 1; form.add(goal, gc); y++;
 
-        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Activity level:"), gc);
+        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Nivel activitate:"), gc);
         gc.gridx = 1; form.add(activity, gc); y++;
 
-        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Gender:"), gc);
+        gc.gridx = 0; gc.gridy = y; form.add(new JLabel("Gen:"), gc);
         gc.gridx = 1; form.add(gender, gc); y++;
 
         gc.gridx = 0; gc.gridy = y; gc.gridwidth = 2;
@@ -64,7 +64,7 @@ public final class ProfilePanel extends JPanel {
             try {
                 UserProfile p = build(userId);
                 dao.upsert(p);
-                Dialogs.info(this, "Saved.");
+                Dialogs.info(this, "Salvat.");
                 load(userId);
             } catch (Exception ex) {
                 Dialogs.error(this, ex.getMessage());
@@ -79,18 +79,18 @@ public final class ProfilePanel extends JPanel {
     private void load(long userId) {
         UserProfile p = dao.get(userId);
         if (p == null) {
-            updatedAt.setText("Updated at: -");
+            updatedAt.setText("Actualizat la: -");
             return;
         }
 
         age.setText(p.age() == null ? "" : String.valueOf(p.age()));
         height.setText(p.heightCm() == null ? "" : String.valueOf(p.heightCm()));
         weight.setText(p.weightKg() == null ? "" : String.valueOf(p.weightKg()));
-        if (p.goal() != null) goal.setSelectedItem(p.goal());
-        if (p.activityLevel() != null) activity.setSelectedItem(p.activityLevel());
-        if (p.gender() != null) gender.setSelectedItem(p.gender());
+        if (p.goal() != null) goal.setSelectedItem(mapGoalToUi(p.goal()));
+        if (p.activityLevel() != null) activity.setSelectedItem(mapActivityToUi(p.activityLevel()));
+        if (p.gender() != null) gender.setSelectedItem(mapGenderToUi(p.gender()));
 
-        updatedAt.setText("Updated at: " + (p.updatedAt() == null ? "-" : p.updatedAt()));
+        updatedAt.setText("Actualizat la: " + (p.updatedAt() == null ? "-" : p.updatedAt()));
     }
 
     private UserProfile build(long userId) {
@@ -119,5 +119,35 @@ public final class ProfilePanel extends JPanel {
         String t = s == null ? "" : s.trim();
         if (t.isEmpty()) return null;
         return Double.parseDouble(t);
+    }
+
+    private static String mapGoalToUi(String value) {
+        if (value == null) return null;
+        return switch (value) {
+            case "weight_loss" -> "slabire";
+            case "bulking" -> "masa";
+            case "maintenance" -> "mentinere";
+            default -> value;
+        };
+    }
+
+    private static String mapActivityToUi(String value) {
+        if (value == null) return null;
+        return switch (value) {
+            case "low" -> "scazut";
+            case "moderate" -> "moderat";
+            case "high" -> "ridicat";
+            default -> value;
+        };
+    }
+
+    private static String mapGenderToUi(String value) {
+        if (value == null) return null;
+        return switch (value) {
+            case "male" -> "masculin";
+            case "female" -> "feminin";
+            case "other" -> "altul";
+            default -> value;
+        };
     }
 }

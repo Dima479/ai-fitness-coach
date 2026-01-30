@@ -1,9 +1,9 @@
 package aicoach.model;
 /**
- * @file Plan.java
- * @brief Model de date imutabil pentru un plan asociat unui utilizator.
+ * @file plan.java
+ * @brief model de date imutabil pentru un plan asociat unui utilizator.
  *
- * Un plan poate reprezenta un plan de nutritie sau antrenament , stocat ca text/continut generat.
+ * un plan poate reprezenta un plan de nutritie sau antrenament  stocat ca text/continut generat.
  */
 
 public record Plan(

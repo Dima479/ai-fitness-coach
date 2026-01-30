@@ -18,7 +18,7 @@ public final class PlansPanel extends JPanel {
     private final ProfileDao profileDao = new ProfileDao();
     private final CoachService coach = new CoachService();
 
-    private final DefaultTableModel model = new DefaultTableModel(new Object[]{"type", "created_at"}, 0) {
+    private final DefaultTableModel model = new DefaultTableModel(new Object[]{"tip", "creat_la"}, 0) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
     };
     private final JTable table = new JTable(model);
@@ -32,9 +32,9 @@ public final class PlansPanel extends JPanel {
         left.add(new JScrollPane(table), BorderLayout.CENTER);
 
         JPanel leftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton genWorkout = new JButton("Generate WORKOUT");
-        JButton genNutrition = new JButton("Generate NUTRITION");
-        JButton delete = new JButton("Delete selected");
+        JButton genWorkout = new JButton("Genereaza ANTRENAMENT");
+        JButton genNutrition = new JButton("Genereaza NUTRITIE");
+        JButton delete = new JButton("Sterge selectia");
         leftButtons.add(genWorkout);
         leftButtons.add(genNutrition);
         leftButtons.add(delete);
@@ -62,7 +62,7 @@ public final class PlansPanel extends JPanel {
             try {
                 UserProfile p = profileDao.get(user.id());
                 if (p == null) {
-                    Dialogs.error(this, "First, colplete your profile.");
+                    Dialogs.error(this, "Mai intai completeaza profilul.");
                     return;
                 }
                 String txt = coach.generateWorkoutPlan(p);
@@ -77,7 +77,7 @@ public final class PlansPanel extends JPanel {
             try {
                 UserProfile p = profileDao.get(user.id());
                 if (p == null) {
-                    Dialogs.error(this, "First, colplete your profile.");
+                    Dialogs.error(this, "Mai intai completeaza profilul.");
                     return;
                 }
                 String txt = coach.generateNutritionPlan(p);
@@ -92,7 +92,7 @@ public final class PlansPanel extends JPanel {
             int row = table.getSelectedRow();
             if (row < 0) return;
             if (row >= plans.size()) return;
-            if (!Dialogs.confirm(this, "Delete selected plan?")) return;
+            if (!Dialogs.confirm(this, "Stergi planul selectat?")) return;
             planDao.delete(plans.get(row).id(), user.id());
             reload(user.id());
             content.setText("");

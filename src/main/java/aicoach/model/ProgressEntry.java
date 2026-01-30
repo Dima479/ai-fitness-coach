@@ -1,9 +1,9 @@
 package aicoach.model;
 /**
- * @file ProgressEntry.java
- * @brief Model de date imutabil pentru o inregistrare de progres a unui utilizator.
+ * @file progressentry.java
+ * @brief model de date imutabil pentru o inregistrare de progres a unui utilizator.
  *
- * Contine datele monitorizate pe o anumita zi (greutate, calorii, antrenament) si notite optionale.
+ * contine datele monitorizate pe o anumita zi (greutate calorii antrenament) si notite optionale.
  */
 public record ProgressEntry(
         long id,

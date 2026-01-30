@@ -17,7 +17,7 @@ public final class ProgressPanel extends JPanel {
     private final ProgressDao dao = new ProgressDao();
 
     private final DefaultTableModel model = new DefaultTableModel(
-            new Object[]{"date", "weight", "calories", "workout_min", "notes"}, 0
+            new Object[]{"data", "greutate", "calorii", "minute_antrenament", "note"}, 0
     ) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
     };
@@ -36,19 +36,19 @@ public final class ProgressPanel extends JPanel {
 
         JPanel form = new JPanel(new FlowLayout(FlowLayout.LEFT));
         date.setText(LocalDate.now().toString());
-        form.add(new JLabel("Date (YYYY-MM-DD):"));
+        form.add(new JLabel("Data (YYYY-MM-DD):"));
         form.add(date);
-        form.add(new JLabel("Weight:"));
+        form.add(new JLabel("Greutate:"));
         form.add(weight);
-        form.add(new JLabel("Calories:"));
+        form.add(new JLabel("Calorii:"));
         form.add(calories);
-        form.add(new JLabel("Minutes:"));
+        form.add(new JLabel("Minute:"));
         form.add(minutes);
-        form.add(new JLabel("Notes:"));
+        form.add(new JLabel("Note:"));
         form.add(notes);
 
-        JButton add = new JButton("Add");
-        JButton del = new JButton("Delete selected");
+        JButton add = new JButton("Adauga");
+        JButton del = new JButton("Sterge selectia");
         form.add(add);
         form.add(del);
 
@@ -82,7 +82,7 @@ public final class ProgressPanel extends JPanel {
             int row = table.getSelectedRow();
             if (row < 0) return;
             if (row >= entries.size()) return;
-            if (!Dialogs.confirm(this, "Delete selected entry?")) return;
+            if (!Dialogs.confirm(this, "Stergi intrarea selectata?")) return;
             dao.delete(entries.get(row).id(), user.id());
             reload(user.id());
         });
