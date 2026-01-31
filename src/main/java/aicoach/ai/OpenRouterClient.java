@@ -15,7 +15,7 @@ import java.time.Duration;
  * construieste un request json cu mesaje (system + user) trimite cererea cu api key din env
  * si returneaza textul raspunsului
  */
-public final class OpenRouterClient {
+public final class OpenRouterClient {u
 
     /** endpoint-ul openrouter pentru chat completions. */
     private static final String URL = "https://openrouter.ai/api/v1/chat/completions";
